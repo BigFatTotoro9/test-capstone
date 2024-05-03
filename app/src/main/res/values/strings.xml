@@ -7,4 +7,7 @@
     <string name="type_your_email">Type your Email</string>
     <string name="not_registered_yet_sign_up">Not Registered Yet , Sign Up !</string>
     <string name="sign_in">Sign In</string>
+    <string name="sign_up_success">You successfully signed in!</string>
+    <string name="error_empty_fields">Empty field are not allowed</string>
+    <string name="error_password_mismatch">Password is not matching</string>
 </resources>
