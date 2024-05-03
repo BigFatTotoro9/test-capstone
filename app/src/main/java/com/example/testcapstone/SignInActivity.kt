@@ -1,24 +1,38 @@
 package com.example.testcapstone
 
+import android.content.ContentValues.TAG
 import android.content.Intent
 import android.os.Bundle
-import android.widget.Toast
+import android.util.Log
 import androidx.appcompat.app.AppCompatActivity
 import com.example.testcapstone.databinding.ActivitySignInBinding
+import com.example.testcapstone.utils.AuthUtil.checkCurrentUser
+import com.example.testcapstone.utils.AuthUtil.showToast
+import com.example.testcapstone.utils.AuthUtil.signInWithEmailAndPassword
+import com.example.testcapstone.utils.AuthUtil.validateSignInForm
 import com.google.firebase.auth.FirebaseAuth
+import com.google.firebase.auth.ktx.auth
+import com.google.firebase.ktx.Firebase
 
 class SignInActivity : AppCompatActivity() {
 
     private lateinit var binding: ActivitySignInBinding
-    private lateinit var firebaseAuth: FirebaseAuth
+    private lateinit var auth: FirebaseAuth
+
+    override fun onStart() {
+        super.onStart()
+
+        auth = Firebase.auth
+
+        val currentUser = auth.currentUser
+        checkCurrentUser(this, currentUser)
+    }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
         binding = ActivitySignInBinding.inflate(layoutInflater)
         setContentView(binding.root)
-
-        firebaseAuth = FirebaseAuth.getInstance()
 
         binding.textView.setOnClickListener {
             val intent = Intent(this, SignUpActivity::class.java)
@@ -29,19 +43,20 @@ class SignInActivity : AppCompatActivity() {
             val email = binding.emailEt.text.toString()
             val pass = binding.passET.text.toString()
 
-            if (email.isNotEmpty() && pass.isNotEmpty() ) {
+            val signInFormValidation = validateSignInForm(this, email, pass)
 
+            signInWithEmailAndPassword(email, pass) { isSuccess, exception ->
+                if (isSuccess && signInFormValidation) {
 
-                firebaseAuth.signInWithEmailAndPassword(email, pass).addOnCompleteListener {
-                    if (it.isSuccessful) {
-                        val intent = Intent(this, MainActivity::class.java)
-                        startActivity(intent)
-                    } else {
-                        Toast.makeText(this, it.exception.toString(), Toast.LENGTH_SHORT).show()
-                    }
+                    Log.d(TAG, "loginUserWithEmail:success")
+                    val mainIntent = Intent(this, MainActivity::class.java)
+                    startActivity(mainIntent)
+                } else {
+
+                    Log.e("TAG", "Error: ${exception?.message}")
+                    showToast(this, exception.toString())
                 }
-            } else {
-                Toast.makeText(this, "Empty field are not allowed", Toast.LENGTH_SHORT).show()
+
             }
         }
     }
