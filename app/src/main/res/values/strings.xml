@@ -10,4 +10,5 @@
     <string name="sign_up_success">You successfully signed in!</string>
     <string name="error_empty_fields">Empty field are not allowed</string>
     <string name="error_password_mismatch">Password is not matching</string>
+    <string name="welcome_message">Welcome %s</string>
 </resources>

@@ -3,8 +3,6 @@ package com.example.testcapstone
 import android.os.Bundle
 import androidx.activity.enableEdgeToEdge
 import androidx.appcompat.app.AppCompatActivity
-import androidx.core.view.ViewCompat
-import androidx.core.view.WindowInsetsCompat
 import com.example.testcapstone.databinding.ActivityMainBinding
 import com.google.firebase.auth.FirebaseAuth
 
@@ -22,6 +20,7 @@ class MainActivity : AppCompatActivity() {
         setContentView(binding.root)
 
         // Show current account email
-        binding.tvMain.text = "Welcome " + auth.currentUser?.email
+        val welcomeMessage = getString(R.string.welcome_message, auth.currentUser?.email)
+        binding.tvMain.text = welcomeMessage
     }
 }
